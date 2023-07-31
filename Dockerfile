@@ -4,16 +4,16 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["conduflex_api/conduflex_api.csproj", "conduflex_api/"]
-RUN dotnet restore "conduflex_api/conduflex_api.csproj"
+COPY ["conduflex-api/conduflex-api.csproj", "conduflex-api/"]
+RUN dotnet restore "conduflex-api/conduflex-api.csproj"
 COPY . .
-WORKDIR "/src/conduflex_api"
-RUN dotnet build "conduflex_api.csproj" -c Release -o /app/build
+WORKDIR "/src/conduflex-api"
+RUN dotnet build "conduflex-api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "conduflex_api.csproj" -c Release -o /app/publish
+RUN dotnet publish "conduflex-api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "conduflex_api.dll"]
+ENTRYPOINT ["dotnet", "conduflex-api.dll"]
