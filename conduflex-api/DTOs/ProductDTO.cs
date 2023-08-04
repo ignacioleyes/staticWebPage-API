@@ -15,7 +15,7 @@ namespace conduflex_api.DTOs
         public float Price { get; set; }
         public string ProductImage { get; set; }
         public string CertificationsImage { get; set; }
-        public string[] CharacteristicsImage { get; set; }
+        public string[] CharacteristicsImages { get; set; }
         public string TablesImage { get; set; }
         public string Alternatives { get; set; }
     }

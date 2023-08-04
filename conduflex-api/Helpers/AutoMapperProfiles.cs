@@ -21,6 +21,10 @@ namespace conduflex_api.Helpers
 
             CreateMap<Contact, ContactDTO>();
             CreateMap<ContactCreationDTO, Contact>();
+
+            CreateMap<Home, HomeDTO>();
+            CreateMap<HomeCreationDTO, Home>();
+            CreateMap<HomePatchDTO, Home>().ReverseMap();
         }
     }
 }
