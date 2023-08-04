@@ -15,7 +15,7 @@ using conduflex_api.Extensions;
 
 namespace conduflex_api.Services
 {
-    public class UserServices : ControllerBase
+    public class UsersServices : ControllerBase
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
@@ -24,7 +24,7 @@ namespace conduflex_api.Services
         private readonly IConfiguration configuration;
         private readonly IActionContextAccessor actionContextAccessor;
 
-        public UserServices(ApplicationDbContext context, IMapper mapper,
+        public UsersServices(ApplicationDbContext context, IMapper mapper,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration,

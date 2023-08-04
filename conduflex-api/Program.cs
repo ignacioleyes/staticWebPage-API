@@ -19,7 +19,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddScoped<UserServices>();
+builder.Services.AddScoped<UsersServices>();
+builder.Services.AddScoped<ContactsServices>();
+//builder.Services.AddScoped<ProductsServices>();
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddHttpClient();
 

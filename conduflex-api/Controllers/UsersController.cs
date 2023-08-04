@@ -12,9 +12,9 @@ namespace conduflex_api.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly UserServices userServices;
+        private readonly UsersServices userServices;
 
-        public UsersController(UserServices userServices)
+        public UsersController(UsersServices userServices)
         {
             this.userServices = userServices;
         }
