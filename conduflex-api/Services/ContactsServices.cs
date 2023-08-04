@@ -32,7 +32,7 @@ namespace conduflex_api.Services
         public async Task<ActionResult<ContactDTO>> GetContactById(int id)
         {
             var contact = await context.Contacts.FirstOrDefaultAsync(r => r.Id == id);
-            if (contact == null) return NotFound();
+            if (contact == null) return NotFound("No se encontró el contacto");
 
             return mapper.Map<ContactDTO>(contact);
         }

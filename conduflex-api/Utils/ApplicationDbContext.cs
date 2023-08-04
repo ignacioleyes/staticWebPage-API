@@ -19,5 +19,6 @@ namespace conduflex_api.Utils
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Home> Home { get; set; }
     }
 }

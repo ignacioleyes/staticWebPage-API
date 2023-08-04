@@ -39,12 +39,14 @@ namespace conduflex_api.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
         public async Task<ActionResult> DeleteContact (int id)
         {
             return await contactsServices.DeleteContact(id);
         }
 
         [HttpDelete]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
         public async Task<ActionResult> DeleteAllContacts()
         {
             return await contactsServices.DeleteAllContacts();
