@@ -25,12 +25,12 @@ namespace conduflex_api.Controllers
             return await homeServices.GetHomeInfo();
         }
 
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
-        public async Task<ActionResult> CreateHomeInfo(HomeCreationDTO homeCreation)
-        {
-            return await homeServices.CreateHomeInfo(homeCreation);
-        }
+        //[HttpPost]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
+        //public async Task<ActionResult> CreateHomeInfo(HomeCreationDTO homeCreation)
+        //{
+        //    return await homeServices.CreateHomeInfo(homeCreation);
+        //}
 
         [HttpPatch("{id:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
@@ -39,11 +39,11 @@ namespace conduflex_api.Controllers
             return await homeServices.PatchHomeInfo(id, patchDocument);
         }
 
-        [HttpDelete]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
-        public async Task<ActionResult> DeleteHomeInfo()
-        {
-            return await homeServices.DeleteHomeInfo();
-        }
+        //[HttpDelete]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
+        //public async Task<ActionResult> DeleteHomeInfo()
+        //{
+        //    return await homeServices.DeleteHomeInfo();
+        //}
     }
 }
