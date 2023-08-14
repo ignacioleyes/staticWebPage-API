@@ -22,7 +22,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<UsersServices>();
 builder.Services.AddScoped<ContactsServices>();
 builder.Services.AddScoped<HomeServices>();
-//builder.Services.AddScoped<ProductsServices>();
+builder.Services.AddScoped<ProductsServices>();
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddHttpClient();
 

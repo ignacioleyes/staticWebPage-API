@@ -34,7 +34,7 @@ namespace conduflex_api.Controllers
 
         [HttpPatch("{id:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
-        public async Task<ActionResult> PatchHomeInfo([FromRoute] int id, JsonPatchDocument<HomePatchDTO> patchDocument)
+        public async Task<ActionResult> PatchHomeInfo([FromRoute] int id, [FromBody] JsonPatchDocument<HomePatchDTO> patchDocument)
         {
             return await homeServices.PatchHomeInfo(id, patchDocument);
         }

@@ -33,14 +33,14 @@ namespace conduflex_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateContact(ContactCreationDTO contactCreation)
+        public async Task<ActionResult> CreateContact([FromBody] ContactCreationDTO contactCreation)
         {
             return await contactsServices.CreateContact(contactCreation);
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
-        public async Task<ActionResult> DeleteContact (int id)
+        public async Task<ActionResult> DeleteContact ([FromRoute] int id)
         {
             return await contactsServices.DeleteContact(id);
         }
