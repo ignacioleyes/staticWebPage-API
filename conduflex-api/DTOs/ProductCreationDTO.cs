@@ -25,5 +25,6 @@ namespace conduflex_api.DTOs
         [Required]
         public string TablesImage { get; set; }
         public string Alternatives { get; set; }
+        public string EnglishAlternatives { get; set; }
     }
 }

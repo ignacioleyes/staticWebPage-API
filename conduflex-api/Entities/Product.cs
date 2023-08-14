@@ -16,6 +16,7 @@
         public string[] CharacteristicsImages { get; set; }
         public string TablesImage { get; set; }
         public string Alternatives { get; set; }
+        public string EnglishAlternatives { get; set; }
     }
 
     public enum BrandEnum
