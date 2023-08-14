@@ -20,7 +20,8 @@ namespace conduflex_api.Helpers
             CreateMap<ProductPatchDTO, Product>().ReverseMap();
 
             CreateMap<Contact, ContactDTO>();
-            CreateMap<ContactCreationDTO, Contact>();
+            CreateMap<ContactCreationDTO, Contact>()
+                .ForMember(c => c.CreationDate, c => c.MapFrom(dto => DateTime.SpecifyKind(dto.CreationDate, DateTimeKind.Utc)));
 
             CreateMap<Home, HomeDTO>();
             CreateMap<HomeCreationDTO, Home>();

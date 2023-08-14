@@ -12,5 +12,6 @@ namespace conduflex_api.DTOs
         public string Email { get; set; }
         [Required]
         public string Message { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

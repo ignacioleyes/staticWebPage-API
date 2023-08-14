@@ -60,7 +60,7 @@ namespace conduflex_api.Services
             context.Add(contact);
             await context.SaveChangesAsync();
 
-            await Mailer.SendMail(templateId, data);
+            //await Mailer.SendMail(templateId, data);
 
             return Ok(contact);
         }
