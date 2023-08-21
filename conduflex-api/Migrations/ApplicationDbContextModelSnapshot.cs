@@ -251,7 +251,7 @@ namespace conduflex_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contacts");
+                    b.ToTable("Contacts", (string)null);
                 });
 
             modelBuilder.Entity("conduflex_api.Entities.Home", b =>
@@ -279,7 +279,7 @@ namespace conduflex_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Home");
+                    b.ToTable("Home", (string)null);
                 });
 
             modelBuilder.Entity("conduflex_api.Entities.Product", b =>
@@ -334,7 +334,7 @@ namespace conduflex_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("conduflex_api.Entities.ApplicationUser", b =>
