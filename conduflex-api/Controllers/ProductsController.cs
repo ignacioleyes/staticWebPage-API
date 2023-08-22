@@ -32,7 +32,7 @@ namespace conduflex_api.Controllers
         }
 
         [HttpPost]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
         public async Task<ActionResult> CreateProduct([FromBody] ProductCreationDTO productCreation)
         {
             return await productsServices.CreateProduct(productCreation);
