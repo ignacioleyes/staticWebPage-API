@@ -46,13 +46,11 @@ namespace conduflex_api.Services
             return Ok(product);
         }
 
-        public async Task<ActionResult> UpdateProduct(int id, JsonPatchDocument<ProductPatchDTO> patchDocument)
+        public async Task<ActionResult> UpdateProduct(int id, ProductPatchDTO productPatchDTO)
         {
             var product = await context.Products.FirstOrDefaultAsync(r => r.Id == id);
             if (product == null) return NotFound();
 
-            var productPatchDTO = mapper.Map<ProductPatchDTO>(product);
-            patchDocument.ApplyTo(productPatchDTO, ModelState);
             mapper.Map(productPatchDTO, product);
 
             await context.SaveChangesAsync();

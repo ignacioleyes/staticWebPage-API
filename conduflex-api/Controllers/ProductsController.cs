@@ -38,11 +38,11 @@ namespace conduflex_api.Controllers
             return await productsServices.CreateProduct(productCreation);
         }
 
-        [HttpPatch("{id:int}")]
+        [HttpPut("{id:int}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{Roles.ADMIN}")]
-        public async Task<ActionResult> UpdateProduct([FromRoute] int id, [FromBody] JsonPatchDocument<ProductPatchDTO> patchDocument)
+        public async Task<ActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductPatchDTO productPatchDTO)
         {
-            return await productsServices.UpdateProduct(id, patchDocument);
+            return await productsServices.UpdateProduct(id, productPatchDTO);
         }
 
         [HttpDelete("{id:int}")]
