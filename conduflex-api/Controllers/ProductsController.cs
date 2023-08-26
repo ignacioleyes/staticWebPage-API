@@ -2,7 +2,6 @@
 using conduflex_api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using static conduflex_api.Utils.Constants;
 
@@ -29,6 +28,12 @@ namespace conduflex_api.Controllers
         public async Task<ActionResult<ProductDTO>> GetProductById([FromRoute] int id)
         {
             return await productsServices.GetProductById(id);
+        }
+
+        [HttpGet("downloadPDF/{id:int}")]
+        public async Task<IActionResult> DownloadPdf([FromRoute] int id)
+        {
+           return await productsServices.DownloadPdf(id);
         }
 
         [HttpPost]
