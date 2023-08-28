@@ -3,16 +3,19 @@ using conduflex_api.DTOs;
 using conduflex_api.Entities;
 using conduflex_api.Extensions;
 using conduflex_api.Utils;
-using iText.Commons.Actions;
 using iText.IO.Image;
+using iText.Kernel.Events;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
+
 
 
 namespace conduflex_api.Services
@@ -53,38 +56,42 @@ namespace conduflex_api.Services
                 PdfWriter pw = new PdfWriter(ms);
                 PdfDocument pdfDocument = new PdfDocument(pw);
                 Document doc = new Document(pdfDocument, PageSize.LETTER);
-                doc.SetMargins(35, 35, 35, 35);
+                doc.SetMargins(75, 35, 70, 35);
 
-                string imagePath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Images", "logoConduflex.png");
-                iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(imagePath));
+                string imagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "logoConduflex.png");
+                Image img = new(ImageDataFactory.Create(imagePath));
 
-                // Set the desired width and height for resizing
-                float maxWidth = 200; // Set your desired max width
-                float maxHeight = 150; // Set your desired max height
-
-                // Calculate scaling factors
-                float widthScale = maxWidth / img.GetImageWidth();
-                float heightScale = maxHeight / img.GetImageHeight();
-                float scale = Math.Min(widthScale, heightScale);
-
-                // Apply the scaling
-                img.ScaleToFit(maxWidth, maxHeight);
-
-                doc.Add(img);
+                // Set up the header and footer
+                pdfDocument.AddEventHandler(PdfDocumentEvent.START_PAGE, new HeaderHandler(img));
 
                 doc.Add(new Paragraph($"{product.Name}"));
 
-                //if (!string.IsNullOrEmpty(product.ProductImage))
-                //{
-                //    byte[] imageBytes = Convert.FromBase64String(product.ProductImage);
+                if (!string.IsNullOrEmpty(product.ProductImage))
+                {
+                    string[] parts = product.ProductImage.Split(',');
+                    if (parts.Length == 2) 
+                    {
+                        string mimeTypePart = parts[0]; 
+                        string imageBase64Part = parts[1];
 
-                //    ImageData data = ImageDataFactory.Create(imageBytes);
+                        // Check for supported MIME types
+                        if (mimeTypePart == "data:image/png;base64" ||
+                            mimeTypePart == "data:image/jpeg;base64" ||
+                            mimeTypePart == "data:image/jpg;base64")
+                        {
+                            byte[] imageBytes = Convert.FromBase64String(imageBase64Part);
+                            ImageData data = ImageDataFactory.Create(imageBytes);
+                            Image image = new(data);
+                            doc.Add(image);
+                        }
+                    }
+                }
 
-                //    Image image = new(data);
-                //    doc.Add(image);
-                //}
+                doc.Add(new Paragraph("Descripción:"));
 
                 doc.Add(new Paragraph($"{product.Description}"));
+
+                doc.Add(new Paragraph("Características:"));
 
                 if (product.Characteristics != null)
                 {
@@ -102,6 +109,55 @@ namespace conduflex_api.Services
                     }
 
                     doc.Add(new Paragraph(formattedCharacteristics));
+                }
+
+                if (product.CharacteristicsImages.Length > 0)
+                {
+                    foreach( var characteristicImage in product.CharacteristicsImages)
+                    {
+                    string[] parts = characteristicImage.Split(',');
+                        if (parts.Length == 2) 
+                        {
+                            string mimeTypePart = parts[0]; 
+                            string imageBase64Part = parts[1];
+
+                            // Check for supported MIME types
+                            if (mimeTypePart == "data:image/png;base64" ||
+                                mimeTypePart == "data:image/jpeg;base64" ||
+                                mimeTypePart == "data:image/jpg;base64")
+                            {
+                                byte[] imageBytes = Convert.FromBase64String(imageBase64Part);
+                                ImageData data = ImageDataFactory.Create(imageBytes);
+                                Image image = new(data);
+                                doc.Add(image);
+                            }
+                        }
+
+                    }
+
+                }
+
+                doc.Add(new Paragraph("Tabla:"));
+
+                if (!string.IsNullOrEmpty(product.TablesImage))
+                {
+                    string[] parts = product.TablesImage.Split(',');
+                    if (parts.Length == 2)
+                    {
+                        string mimeTypePart = parts[0];
+                        string imageBase64Part = parts[1];
+
+                        // Check for supported MIME types
+                        if (mimeTypePart == "data:image/png;base64" ||
+                            mimeTypePart == "data:image/jpeg;base64" ||
+                            mimeTypePart == "data:image/jpg;base64")
+                        {
+                            byte[] imageBytes = Convert.FromBase64String(imageBase64Part);
+                            ImageData data = ImageDataFactory.Create(imageBytes);
+                            Image image = new(data);
+                            doc.Add(image);
+                        }
+                    }
                 }
 
                 doc.Close();
@@ -143,4 +199,48 @@ namespace conduflex_api.Services
         }
 
     }
+
+    public class HeaderHandler : IEventHandler
+    {
+        Image Img;
+        public HeaderHandler(Image img)
+        {
+            Img = img;
+        }
+
+        public void HandleEvent(Event @event)
+        {
+            PdfDocumentEvent docEvent = (PdfDocumentEvent)@event;
+            PdfDocument pdfDoc = docEvent.GetDocument();
+            PdfPage page = docEvent.GetPage();
+
+            Rectangle rootArea = new Rectangle(35, page.GetPageSize().GetTop() - 70, page.GetPageSize().GetRight() - 70, 50);
+            Canvas canvas = new Canvas(page, rootArea);
+            canvas
+                .Add(getTable(docEvent))
+                .Close();
+
+        }
+
+            public Table getTable(Event docEvent)
+            {
+                float[] cellWidth = { 20f, 80f };
+                Table tableEvent = new Table(UnitValue.CreatePercentArray(cellWidth)).UseAllAvailableWidth();
+
+                Style styleCell = new Style()
+                    .SetBorder(Border.NO_BORDER);
+
+                Style styleText = new Style()
+                    .SetTextAlignment(TextAlignment.RIGHT).SetFontSize(10f);
+
+                Cell cell = new Cell().Add(Img.SetAutoScale(true));
+
+                tableEvent.AddCell(cell
+                    .AddStyle(styleCell)
+                    .SetTextAlignment(TextAlignment.LEFT));
+
+                return tableEvent;
+            }
+    }
+    
 }
