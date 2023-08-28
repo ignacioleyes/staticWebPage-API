@@ -21,6 +21,6 @@
 
     public enum BrandEnum
     {
-        Test
+        Conduflex
     }
 }
