@@ -3,8 +3,10 @@ using conduflex_api.DTOs;
 using conduflex_api.Entities;
 using conduflex_api.Extensions;
 using conduflex_api.Utils;
+using iText.IO.Font;
 using iText.IO.Image;
 using iText.Kernel.Events;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -64,7 +66,7 @@ namespace conduflex_api.Services
                 // Set up the header and footer
                 pdfDocument.AddEventHandler(PdfDocumentEvent.START_PAGE, new HeaderHandler(img));
 
-                doc.Add(new Paragraph($"{product.Name}"));
+                doc.Add(new Paragraph($"{product.Name}").SetFontSize(16).SetTextAlignment(TextAlignment.CENTER));
 
                 if (!string.IsNullOrEmpty(product.ProductImage))
                 {
@@ -87,11 +89,11 @@ namespace conduflex_api.Services
                     }
                 }
 
-                doc.Add(new Paragraph("Descripción:"));
+                doc.Add(new Paragraph("Descripción:").SetFontSize(16));
 
                 doc.Add(new Paragraph($"{product.Description}"));
 
-                doc.Add(new Paragraph("Características:"));
+                doc.Add(new Paragraph("Características:").SetFontSize(16));
 
                 if (product.Characteristics != null)
                 {
@@ -129,6 +131,20 @@ namespace conduflex_api.Services
                                 byte[] imageBytes = Convert.FromBase64String(imageBase64Part);
                                 ImageData data = ImageDataFactory.Create(imageBytes);
                                 Image image = new(data);
+
+                                float availableWidth = PageSize.A4.GetWidth() - doc.GetLeftMargin() - doc.GetRightMargin();
+                                float desiredWidthPercentage = 0.5f; // 50%
+                                float desiredWidth = availableWidth * desiredWidthPercentage;
+
+                                // Calculate height proportionally based on the original image aspect ratio
+                                float originalWidth = data.GetWidth();
+                                float originalHeight = data.GetHeight();
+                                float aspectRatio = originalWidth / originalHeight;
+                                float desiredHeight = desiredWidth / aspectRatio;
+
+                                image.SetWidth(desiredWidth);
+                                image.SetHeight(desiredHeight);
+
                                 doc.Add(image);
                             }
                         }
@@ -137,7 +153,7 @@ namespace conduflex_api.Services
 
                 }
 
-                doc.Add(new Paragraph("Tabla:"));
+                doc.Add(new Paragraph($"{product.Alternatives}").SetFontSize(16).SetTextAlignment(TextAlignment.CENTER));
 
                 if (!string.IsNullOrEmpty(product.TablesImage))
                 {
