@@ -50,8 +50,7 @@ namespace conduflex_api.Services
             {
                 {"senderName", contactCreation.Name },
                 {"senderCompany", contactCreation.Company },
-                {"conduflex_url", "https://conduflex.onrender.com" },
-                {"conduflex_backoffice_url", "https://conduflex_bo.onrender.com" },
+                {"conduflex_backoffice_url", "https://conduflex-cms.onrender.com/contacts" },
                 {"senderEmail", contactCreation.Email },
                 {"message", contactCreation.Message }
             };
@@ -60,7 +59,7 @@ namespace conduflex_api.Services
             context.Add(contact);
             await context.SaveChangesAsync();
 
-            //await Mailer.SendMail(templateId, data);
+            await Mailer.SendMail(templateId, data);
 
             return Ok(contact);
         }

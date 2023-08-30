@@ -11,8 +11,8 @@ namespace conduflex_api.Helpers
         {
             var apiKey = Environment.GetEnvironmentVariable("CONDUFLEX_SENDGRIDKEY");
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("ConduflexSenderMail@conduflex.com", "Conduflex nuevo contacto");
-            var to = new EmailAddress("ConduflexReceiverMail@conduflex.com", "ConduflexName");
+            var from = new EmailAddress("ventas@conduflex.com.ar", "Nuevo contacto");
+            var to = new EmailAddress("tomas@conduflex.com.ar", "Nuevo Contacto");
             var msg = MailHelper.CreateSingleTemplateEmail(from, to, templateId, dynamicTemplateData);
             return await client.SendEmailAsync(msg);
         }
