@@ -27,85 +27,33 @@ namespace conduflex_api.Controllers
             this.contactsServices = contactsServices;
         }
 
-        [HttpPost("test")]
-        public async Task<JToken> CouchbaseTest([FromBody] KeyFinderDTO keyFinderDTO)
+        [HttpGet("test")]
+        public async Task<JObject> CouchbaseTest()
         {
-            // Start of user input
-            // Update these variables to point to your Couchbase Capella instance and credentials.
-            string endpoint = "couchbases://cb.oggu01wh0igkecjj.cloud.couchbase.com"; // Replace this with Connection String
-            string username = "couchbaseDB2"; // Replace this with username from database access credentials
-            string password = "Gianmarco12@"; // Replace this with password from database access credentials
-            string bucketName = "travel-sample";
-            string scopeName = "Archer";
-            string collectionName = "InstanceProperties";
-            // Sample airline document
-            JObject sampleAirline = new JObject
-            {
-                ["type"] = "AIRLINETEST",
-                ["id"] = 1,
-                ["callsign"] = "TEST",
-                ["iata"] = null,
-                ["icao"] = null,
-                ["name"] = "TEST"
-            };
-            // Key will equal: "airline_8091"
-            string key = keyFinderDTO.Key;
-            // End of user input variables
+            string endpoint = "couchbases://cb.0myvjtyjyia7zdmf.cloud.couchbase.com";
+            string username = "ArcherCouchbase";
+            string password = "Tonic3Archer#";
+            string bucketName = "ConfigService";
+            string scopeName = "public";
+            string collectionName = "property";
+            string key = "ArcherWebProperties";
 
-            try
-            {
-                // Connect to cluster with specified credentials
-                var options = new ClusterOptions()
-                    .WithConnectionString(endpoint)
-                    .WithCredentials(username, password);
+            var options = new ClusterOptions()
+              .WithConnectionString(endpoint)
+              .WithCredentials(username, password);
 
-                using var cluster = await Couchbase.Cluster.ConnectAsync(options);
-                await cluster.WaitUntilReadyAsync(TimeSpan.FromSeconds(30));
+            var cluster = await Couchbase.Cluster.ConnectAsync(options);
+            var bucket = await cluster.BucketAsync(bucketName);
+            var scope = bucket.Scope(scopeName);
+            var collection = scope.Collection(collectionName);
 
-                var bucket = await cluster.BucketAsync(bucketName);
-                var scope = bucket.Scope(scopeName);
-                var collection = scope.Collection(collectionName);
+            var getResult = await collection.GetAsync(key);
+            var resultContent = getResult.ContentAs<JObject>();
 
-                // Simple K-V operation - to retrieve a document by ID
-                try
-                {
-                    var getResult = await collection.GetAsync(key);
-                    var resultContent = getResult.ContentAs<JObject>();
+            string authURL = resultContent["AuthenticationUrl"].ToString();
+            string baseURL = resultContent["BaseUrl"].ToString();
 
-                    
-                    if (resultContent["instanceName"].ToString() == keyFinderDTO.InstanceName &&
-                        JArray.DeepEquals(resultContent["tags"], JArray.FromObject(keyFinderDTO.Tags)))
-                    {
-                        Console.WriteLine("Document fetched successfully");
-                        return resultContent["enableFieldEncryption"];
-                    }
-                    else
-                    {
-                        Console.WriteLine("Conditions not met for the document");
-                    }
-                }
-                catch (DocumentNotFoundException)
-                {
-                    Console.WriteLine("Document not found!");
-                }
-            }
-
-            catch (AmbiguousTimeoutException ex)
-            {
-                // Simplest approach is to look at the exception string
-                bool authFailure = ex.ToString().Contains("Authentication Failure");
-                if (authFailure)
-                {
-                    Console.WriteLine("Authentication Failure Detected");
-                }
-                else
-                {
-                    Console.WriteLine("Error:");
-                    Console.WriteLine(ex.Message);
-                }
-            }
-
-            return sampleAirline;
+            return resultContent;
         }
 
         [HttpGet("etcdGET")]
