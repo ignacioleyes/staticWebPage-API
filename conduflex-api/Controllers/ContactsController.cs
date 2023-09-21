@@ -57,13 +57,21 @@ namespace conduflex_api.Controllers
         }
 
         [HttpGet("etcdGET")]
-        public async Task<ActionResult<PutResponse>> GetKV()
+        public ActionResult<PutResponse> GetKV()
         {
             //Name of the key to look for
             var key = "keyName";
 
             //Create ETCD connection
-            var etcdClient = new EtcdClient("localhost:2379");
+            var etcdClient = new EtcdClient("https://ec2-54-213-22-124.us-west-2.compute.amazonaws.com:2379");
+
+            var authentication = new AuthenticateRequest()
+            {
+                Name = "root",
+                Password = "Ho!bjaCAbh52"
+            };
+
+            var authResponse = etcdClient.Authenticate(authentication);
 
             //Create de GET request
             var getRequest = new RangeRequest
@@ -73,7 +81,10 @@ namespace conduflex_api.Controllers
             };
 
             //Do the GET request and take the response
-            var response = await etcdClient.GetAsync(getRequest);
+            var response = etcdClient.Get(getRequest, new Grpc.Core.Metadata()
+            {
+                new Grpc.Core.Metadata.Entry("token", authResponse.Token)
+            });
 
             //If there is one or more keys in the response, return the following text
             if (response.Count > 0)
@@ -90,10 +101,20 @@ namespace conduflex_api.Controllers
         [HttpGet("etcdPOST")]
         public async Task<ActionResult<PutResponse>> CreateKV()
         {
-            var key = "keyName";
-            var keyValue = "keyValue";
+            var key = "Archer/BaseURL";
+            var keyValue = "http://localhost/Archer";
 
-            var etcdClient = new EtcdClient("localhost:2379");
+            var etcdClient = new EtcdClient("https://ec2-54-213-22-124.us-west-2.compute.amazonaws.com:2379");
+
+            var authentication = new AuthenticateRequest()
+            {
+                Name = "root",
+                Password = "Ho!bjaCAbh52"
+            };
+
+            var authResponse = etcdClient.Authenticate(authentication);
+            
+            Console.WriteLine(authResponse);
 
             var request = new PutRequest
             {
@@ -101,7 +122,10 @@ namespace conduflex_api.Controllers
                 Value = ByteString.CopyFromUtf8(keyValue),
             };
 
-            var response = await etcdClient.PutAsync(request);
+            var response = await etcdClient.PutAsync(request, new Grpc.Core.Metadata()
+            {
+                new Grpc.Core.Metadata.Entry("token", authResponse.Token)
+            });
 
             Console.WriteLine($"Key '{key}' created with value '{keyValue}' successfully.");
 
