@@ -17,7 +17,8 @@ namespace conduflex_api.DTOs
         public string CertificationsImage { get; set; }
         public string[] CharacteristicsImages { get; set; }
         public string TablesImage { get; set; }
-        public string Alternatives { get; set; }
-        public string EnglishAlternatives { get; set; }
+        public string Application { get; set; }
+        public string EnglishApplication { get; set; }
+
     }
 }

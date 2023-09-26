@@ -153,7 +153,7 @@ namespace conduflex_api.Services
 
                 }
 
-                doc.Add(new Paragraph($"{product.Alternatives}").SetFontSize(16).SetTextAlignment(TextAlignment.CENTER));
+                doc.Add(new Paragraph($"{product.Application}").SetFontSize(16).SetTextAlignment(TextAlignment.CENTER));
 
                 if (!string.IsNullOrEmpty(product.TablesImage))
                 {
