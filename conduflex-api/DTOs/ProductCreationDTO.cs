@@ -11,7 +11,7 @@ namespace conduflex_api.DTOs
         [Required]
         public string Description { get; set; }
         public string EnglishDescription { get; set; }
-        public BrandEnum Brand { get; set; }
+        public string Brand { get; set; }
         [Required]
         public string Characteristics { get; set; }
         public string EnglishCharacteristics { get; set; }
