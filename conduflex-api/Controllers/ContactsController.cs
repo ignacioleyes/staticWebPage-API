@@ -63,7 +63,7 @@ namespace conduflex_api.Controllers
             var key = "keyName";
 
             //Create ETCD connection
-            var etcdClient = new EtcdClient("https://ec2-54-213-22-124.us-west-2.compute.amazonaws.com:2379");
+            var etcdClient = new EtcdClient("https://ec2-34-213-146-158.us-west-2.compute.amazonaws.com:2379");
 
             var authentication = new AuthenticateRequest()
             {
@@ -104,7 +104,7 @@ namespace conduflex_api.Controllers
             var key = "Archer/BaseURL";
             var keyValue = "http://localhost/Archer";
 
-            var etcdClient = new EtcdClient("https://ec2-54-213-22-124.us-west-2.compute.amazonaws.com:2379");
+            var etcdClient = new EtcdClient("https://ec2-34-213-146-158.us-west-2.compute.amazonaws.com:2379");
 
             var authentication = new AuthenticateRequest()
             {
